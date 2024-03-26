@@ -1,28 +1,28 @@
 Pod::Spec.new do |s|
   s.name             = "QMUIKit"
-  s.version          = "4.1.1"
+  s.version          = "4.7.0"
   s.summary          = "致力于提高项目 UI 开发效率的解决方案"
   s.description      = <<-DESC
                        QMUI iOS 是一个致力于提高项目 UI 开发效率的解决方案，其设计目的是用于辅助快速搭建一个具备基本设计还原效果的 iOS 项目，同时利用自身提供的丰富控件及兼容处理， 让开发者能专注于业务需求而无需耗费精力在基础代码的设计上。不管是新项目的创建，或是已有项目的维护，均可使开发效率和项目质量得到大幅度提升。
                        DESC
-  s.homepage         = "https://qmuiteam.com/ios"
+  s.homepage         = "https://github.com/Tencent/QMUI_iOS"
   s.license          = 'MIT'
   s.author           = {"qmuiteam" => "contact@qmuiteam.com"}
   s.source           = {:git => "https://github.com/Tencent/QMUI_iOS.git", :tag => s.version.to_s}
   #s.source           = {:git => "https://github.com/Tencent/QMUI_iOS.git", :branch => 'master'}
   s.social_media_url = 'https://github.com/Tencent/QMUI_iOS'
   s.requires_arc     = true
-  s.documentation_url = 'https://qmuiteam.com/ios/page/document.html'
+  s.documentation_url = 'https://github.com/Tencent/QMUI_iOS'
   s.screenshot       = 'https://cloud.githubusercontent.com/assets/1190261/26751376/63f96538-486a-11e7-81cf-5bc83a945207.png'
 
-  s.platform         = :ios, '9.0'
-  s.frameworks       = 'Foundation', 'UIKit', 'CoreGraphics', 'Photos'
+  s.platform         = :ios, '13.0'
+  s.frameworks       = 'Foundation', 'UIKit', 'CoreGraphics'
   s.preserve_paths   = 'QMUIConfigurationTemplate/*'
   s.source_files     = 'QMUIKit/QMUIKit.h'
-  s.resource_bundles = {'QMUIResources' => ['QMUIKit/QMUIResources/*.*']}
 
   s.subspec 'QMUICore' do |ss|
-    ss.source_files = 'QMUIKit/QMUIKit.h', 'QMUIKit/QMUICore', 'QMUIKit/UIKitExtensions'
+    ss.source_files = 'QMUIKit/QMUIKit.h', 'QMUIKit/QMUICore', 'QMUIKit/UIKitExtensions', 'QMUIKit/UIKitExtensions/QMUIBarProtocol'
+    ss.frameworks = 'CoreImage', 'ImageIO'
     ss.dependency 'QMUIKit/QMUIWeakObjectContainer'
     ss.dependency 'QMUIKit/QMUILog'
   end
@@ -37,6 +37,15 @@ Pod::Spec.new do |s|
     ss.dependency 'QMUIKit/QMUIComponents/QMUIKeyboardManager'
     ss.dependency 'QMUIKit/QMUILog'
     ss.dependency 'QMUIKit/QMUIComponents/QMUIMultipleDelegates'
+  end
+
+  s.subspec 'QMUIResources' do |ss|
+    ss.resource_bundles = {'QMUIResources' => ['QMUIKit/QMUIResources/*.*']}
+    ss.pod_target_xcconfig = {
+      'EXPANDED_CODE_SIGN_IDENTITY' => '',
+      'CODE_SIGNING_REQUIRED' => 'NO',
+      'CODE_SIGNING_ALLOWED' => 'NO',
+    }
   end
 
   s.subspec 'QMUIWeakObjectContainer' do |ss|
@@ -56,6 +65,11 @@ Pod::Spec.new do |s|
       sss.dependency 'QMUIKit/QMUIComponents/QMUIMultipleDelegates'
     end
 
+    ss.subspec 'QMUICALayerExtension' do |sss|
+      sss.source_files = 'QMUIKit/QMUIComponents/CALayer+QMUIViewAnimation.{h,m}'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUIMultipleDelegates'
+    end
+
     ss.subspec 'QMUIAnimation' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIAnimation'
     end
@@ -68,21 +82,6 @@ Pod::Spec.new do |s|
 
     ss.subspec 'QMUIButton' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIButton/QMUIButton.{h,m}'
-    end
-
-    ss.subspec 'QMUIFillButton' do |sss|
-      sss.source_files = 'QMUIKit/QMUIComponents/QMUIButton/QMUIFillButton.{h,m}'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
-    end
-
-    ss.subspec 'QMUIGhostButton' do |sss|
-      sss.source_files = 'QMUIKit/QMUIComponents/QMUIButton/QMUIGhostButton.{h,m}'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
-    end
-
-    ss.subspec 'QMUILinkButton' do |sss|
-      sss.source_files = 'QMUIKit/QMUIComponents/QMUIButton/QMUILinkButton.{h,m}'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
     end
 
     ss.subspec 'QMUINavigationButton' do |sss|
@@ -115,6 +114,8 @@ Pod::Spec.new do |s|
 
     ss.subspec 'QMUIKeyboardManager' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIKeyboardManager.{h,m}'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUIAppearance'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUIMultipleDelegates'
     end
 
     # 从这里开始就是非必须的组件
@@ -130,6 +131,7 @@ Pod::Spec.new do |s|
 			sss.dependency 'QMUIKit/QMUIComponents/QMUITextField'
 			sss.dependency 'QMUIKit/QMUIComponents/QMUIKeyboardManager'
 			sss.dependency 'QMUIKit/QMUIComponents/QMUIAppearance'
+			sss.dependency 'QMUIKit/QMUIComponents/QMUILabel'
     end
 
     ss.subspec 'QMUIAppearance' do |sss|
@@ -154,9 +156,13 @@ Pod::Spec.new do |s|
 
     ss.subspec 'QMUIConsole' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIConsole/*.{h,m}'
+      sss.dependency 'QMUIKit/QMUIResources'
       sss.dependency 'QMUIKit/QMUIComponents/QMUITextView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUITextField'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUITableView'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUITableViewCell'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUICellHeightKeyCache'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIPopupMenuView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUICAAnimationExtension'
     end
@@ -180,6 +186,7 @@ Pod::Spec.new do |s|
 
     ss.subspec 'QMUIEmotionView' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIEmotionView.{h,m}'
+      sss.dependency 'QMUIKit/QMUIResources'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
     end
 
@@ -264,10 +271,6 @@ Pod::Spec.new do |s|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUISegmentedControl.{h,m}'
     end
 
-    ss.subspec 'QMUISlider' do |sss|
-      sss.source_files = 'QMUIKit/QMUIComponents/QMUISlider.{h,m}'
-    end
-
     ss.subspec 'QMUITableViewCell' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUITableViewCell.{h,m}'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
@@ -297,9 +300,6 @@ Pod::Spec.new do |s|
       sss.dependency 'QMUIKit/QMUIComponents/QMUIImagePickerLibrary'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIAlertController'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIFillButton'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIGhostButton'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUILinkButton'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIConsole'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIEmotionView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIEmptyView'
@@ -308,43 +308,42 @@ Pod::Spec.new do |s|
       sss.dependency 'QMUIKit/QMUIComponents/QMUILabel'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIPopupContainerView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIPopupMenuView'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUISlider'
       sss.dependency 'QMUIKit/QMUIComponents/QMUITextField'
       sss.dependency 'QMUIKit/QMUIComponents/QMUITextView'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIVisualEffectView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIToastView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIModalPresentationViewController'
+      sss.dependency 'QMUIKit/QMUIComponents/QMUIBadge'
     end
 
     ss.subspec 'QMUITips' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUITips.{h,m}'
+      sss.dependency 'QMUIKit/QMUIResources'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIToastView'
     end
     
-    ss.subspec 'QMUIVisualEffectView' do |sss|
-      sss.source_files = 'QMUIKit/QMUIComponents/QMUIVisualEffectView.{h,m}'
-    end
-
     ss.subspec 'QMUIWindowSizeMonitor' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIWindowSizeMonitor.{h,m}'
     end
 
     ss.subspec 'QMUIZoomImageView' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/QMUIZoomImageView.{h,m}'
+      sss.frameworks = 'PhotosUI', 'CoreMedia', 'AVFoundation', 'QuartzCore'
+      sss.dependency 'QMUIKit/QMUIResources'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIEmptyView'
 			sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
-			sss.dependency 'QMUIKit/QMUIComponents/QMUISlider'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIPieProgressView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIAssetLibrary'
     end
 
     ss.subspec 'QMUIAssetLibrary' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/AssetLibrary/*.{h,m}'
+      sss.frameworks = 'Photos', 'CoreServices'
     end
 
     ss.subspec 'QMUIImagePickerLibrary' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/ImagePickerLibrary/*.{h,m}'
       sss.dependency 'QMUIKit/QMUIMainFrame'
+      sss.dependency 'QMUIKit/QMUIResources'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIImagePreviewView'
       sss.dependency 'QMUIKit/QMUIComponents/QMUITableViewCell'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIButton'
@@ -384,7 +383,6 @@ Pod::Spec.new do |s|
     ss.subspec 'QMUIToastView' do |sss|
       sss.source_files = 'QMUIKit/QMUIComponents/ToastView/*.{h,m}'
       sss.dependency 'QMUIKit/QMUIComponents/QMUIKeyboardManager'
-      sss.dependency 'QMUIKit/QMUIComponents/QMUIVisualEffectView'
     end
 
     ss.subspec 'QMUIStaticTableView' do |sss|
